@@ -1,0 +1,109 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Edit your news post on our platform.">
+  <meta name="keywords" content="News, Edit News, Platform">
+  <title>Edit News | Platform</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+</head>
+<body class="bg-black text-white font-sans leading-normal tracking-normal">
+
+  <!-- Navbar -->
+  <nav class="fixed w-full z-10 top-0 bg-black opacity-100 shadow">
+    <div class="container mx-auto flex flex-wrap items-center justify-between p-4">
+      <div class="flex items-center">
+        <a href="#" class="text-white font-bold text-2xl">News Platform</a>
+      </div>
+      <div class="hidden md:flex space-x-6">
+        <a href="/home/" class="text-gray-300 hover:text-white">Home</a>
+        <a href="/add_news" class="text-gray-300 hover:text-white">Add News</a>
+        <a href="/view_mynews" class="text-gray-300 hover:text-white">My News</a>
+        <a href="/logout" class="text-gray-300 hover:text-white">Logout</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Edit News Section -->
+  <div class="container mx-auto pt-24 px-4">
+    <div class="max-w-lg mx-auto bg-gray-800 p-6 rounded shadow-lg">
+      <h2 class="text-2xl font-bold text-center text-white mb-6">Edit News Post</h2>
+      
+      <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        
+        <!-- Headline Field -->
+        <div class="mb-4">
+          <label for="headline" class="block text-gray-300 text-sm font-bold mb-2">Headline</label>
+          <input type="text" id="headline" name="headline" value="{{ news.headline }}" required 
+                 class="w-full px-3 py-2 border border-gray-700 bg-gray-900 text-white rounded 
+                        focus:outline-none focus:ring-2 focus:ring-blue-500">
+        </div>
+
+        <!-- News Text Field -->
+        <div class="mb-4">
+          <label for="newstext" class="block text-gray-300 text-sm font-bold mb-2">News Text</label>
+          <textarea id="newstext" name="newstext" rows="5" required 
+                    class="w-full px-3 py-2 border border-gray-700 bg-gray-900 text-white rounded 
+                           focus:outline-none focus:ring-2 focus:ring-blue-500">{{ news.newstext }}</textarea>
+        </div>
+
+        <!-- Category Dropdown -->
+        <div class="mb-4">
+        <label for="category" class="block text-gray-300 text-sm font-bold mb-2">Category</label>
+        <select id="category" name="category" required 
+                class="w-full px-3 py-2 border border-gray-700 bg-gray-900 text-white rounded 
+                        focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer">
+          <option value="Sports" {% if news.category == "Sports" %}selected{% endif %}>Sports</option>
+          <option value="Entertainment" {% if news.category == "Entertainment" %}selected{% endif %}>Entertainment</option>
+          <option value="Local News" {% if news.category == "Local News" %}selected{% endif %}>Local News</option>
+          <option value="Technology" {% if news.category == "Technology" %}selected{% endif %}>Technology</option>
+          <option value="Business" {% if news.category == "Business" %}selected{% endif %}>Business</option>
+        </select>
+        </div>
+
+        <!-- Existing Image Preview -->
+        {% if news.image %}
+          <div class="mb-4">
+            <p class="text-gray-300 text-sm font-bold mb-2">Current Image</p>
+            <img src="{{ news.image.url }}" alt="News Image" class="w-full h-48 object-cover rounded">
+          </div>
+        {% endif %}
+
+        <!-- Upload New Image Field -->
+        <div class="mb-4">
+          <label for="image" class="block text-gray-300 text-sm font-bold mb-2">Update Image</label>
+          <input type="file" id="image" name="image" 
+                 class="w-full text-gray-300 bg-gray-900 border border-gray-700 rounded p-2">
+        </div>
+        
+        <!-- News Status Display -->
+        <div class="mb-6">
+          <label class="block text-gray-300 text-sm font-bold mb-2">Current Status</label>
+          <p class="text-blue-400 font-bold">{{ news.newsstatus }}</p>
+        </div>
+        
+        <!-- Submit Button -->
+        <div class="flex items-center justify-between">
+          <button type="submit" 
+                  class="w-full bg-blue-500 text-white py-2 px-4 rounded focus:outline-none 
+                         hover:bg-blue-600 transition duration-300">
+            Save Changes
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-black text-white py-6 mt-12">
+    <div class="container mx-auto text-center">
+      <p>&copy; 2024 News Platform. All rights reserved.</p>
+    </div>
+  </footer>
+
+</body>
+</html>

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reported News - Admin Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.0.0/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        /* Sidebar styling */
+        .sidebar {
+            min-width: 250px;
+            max-width: 250px;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background-color: #1a202c;
+            color: white;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            z-index: 1000;
+        }
+        .sidebar a {
+            margin: 10px 0;
+            color: #a0aec0;
+            text-decoration: none;
+            font-size: 1rem;
+        }
+        .sidebar a:hover {
+            color: #63b3ed;
+        }
+        /* Content area styling */
+        .content {
+            margin-left: 250px;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <h2 class="text-xl font-semibold mb-4">Admin Dashboard</h2>
+        <a href="{% url 'admin_home' %}">Home</a>
+        <a href="{% url 'view_users' %}">User List</a>
+        <a href="{% url 'view_news' %}">News List</a>
+        <a href="{% url 'view_reported_news' %}" class="text-blue-500">Reported News</a>
+    </div>
+
+    <!-- Content Area -->
+    <div class="content">
+        <h1 class="text-2xl font-semibold text-gray-800 mb-6">Reported News</h1>
+
+        <!-- Reported News Table -->
+        <div class="overflow-auto">
+            <table class="min-w-full bg-white border border-gray-200 rounded-lg shadow-md">
+                <thead>
+                    <tr class="bg-gray-200 text-gray-700">
+                        <th class="px-6 py-3 border-b text-left">ID</th>
+                        <th class="px-6 py-3 border-b text-left">News Posted By</th>
+                        <th class="px-6 py-3 border-b text-left">News Content</th>
+                        <th class="px-6 py-3 border-b text-left">Reported By</th>
+                        <th class="px-6 py-3 border-b text-left">Report Type</th>
+                        <th class="px-6 py-3 border-b text-left">Reason</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for report in reported_news %}
+                    <tr class="text-gray-700">
+                        <td class="px-6 py-4 border-b">{{ report.news.id }}</td>
+                        <td class="px-6 py-4 border-b">{{ report.news.author.name }}</td>
+                        <td class="px-6 py-4 border-b">
+                            {% if report.news.newstext|length > 5 %}
+                                {{ report.news.newstext|truncatewords:5 }}
+                                <button onclick="openModal('{{ report.news.id }}', '{{ report.news.newstext|escapejs }}')" class="text-blue-500 hover:underline">Read More</button>
+                            {% else %}
+                                {{ report.news.newstext }}
+                            {% endif %}
+                        </td>
+                        <td class="px-6 py-4 border-b">{{ report.user.name }}</td>
+                        <td class="px-6 py-4 border-b">{{ report.report_type }}</td>
+                        <td class="px-6 py-4 border-b">
+                            {% if report.reason_text|length > 5 %}
+                                {{ report.reason_text|truncatewords:5 }}
+                                <button onclick="openModal('{{ report.id }}', '{{ report.reason_text|escapejs }}')" class="text-blue-500 hover:underline">Read More</button>
+                            {% else %}
+                                {{ report.reason_text }}
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="text-center text-gray-500 py-4">No reported news found.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Modal for Read More -->
+    <div id="modal" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center hidden" aria-hidden="true" role="dialog">
+        <div class="bg-white rounded-lg shadow-lg w-1/2 p-6">
+            <p id="modal-content" class="text-gray-700"></p>
+            <button onclick="closeModal()" class="mt-4 bg-blue-500 text-white px-4 py-2 rounded">Close</button>
+        </div>
+    </div>
+
+    <!-- JavaScript for Modal Functionality -->
+    <script>
+        // Open the modal with content
+        function openModal(id, content) {
+            const modal = document.getElementById("modal");
+            document.getElementById("modal-content").textContent = content;
+            modal.classList.remove("hidden");
+            modal.setAttribute("aria-hidden", "false");
+        }
+
+        // Close the modal
+        function closeModal() {
+            const modal = document.getElementById("modal");
+            modal.classList.add("hidden");
+            modal.setAttribute("aria-hidden", "true");
+        }
+    </script>
+
+</body>
+</html>

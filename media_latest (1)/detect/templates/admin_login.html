@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.0.0/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        /* Custom style to position the alert */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            display: none;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex items-center justify-center h-screen">
+
+    <div class="w-full max-w-md bg-white rounded-lg shadow-md p-6">
+        <h2 class="text-2xl font-semibold text-gray-800 text-center mb-6">Admin Login</h2>
+
+        <form action="{% url 'admin_login' %}" method="POST" class="space-y-4">
+            {% csrf_token %}
+            
+            <div>
+                <label for="email" class="block text-gray-700">Email</label>
+                <input type="email" name="email" id="email" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter email" required>
+            </div>
+
+            <div>
+                <label for="password" class="block text-gray-700">Password</label>
+                <input type="password" name="password" id="password" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter password" required>
+            </div>
+
+            <button type="submit" class="w-full bg-blue-500 text-white py-2 rounded-lg font-semibold hover:bg-blue-600 focus:outline-none">
+                Login
+            </button>
+        </form>
+
+        <!-- Notification message -->
+        <div id="notification" class="notification bg-red-500 text-white py-2 px-4 rounded-lg shadow-lg">
+            Invalid email or password
+        </div>
+    </div>
+
+    <script>
+        // Show notification if error exists
+        {% if error %}
+            document.getElementById("notification").style.display = "block";
+            setTimeout(() => {
+                document.getElementById("notification").style.display = "none";
+            }, 3000); // Hide after 3 seconds
+        {% endif %}
+    </script>
+</body>
+</html>

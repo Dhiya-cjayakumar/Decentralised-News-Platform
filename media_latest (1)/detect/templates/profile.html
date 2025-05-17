@@ -1,0 +1,124 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="View your profile on our Fake News Detection platform.">
+  <meta name="keywords" content="Fake News Detection, Profile, User Account, AI">
+  <title>Profile | Fake News Detection Platform</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <style>
+    /* Custom Modal Styles */
+    .modal {
+      display: none; /* Hidden by default */
+      position: fixed; /* Stay in place */
+      z-index: 50; /* Sit on top */
+      left: 0;
+      top: 0;
+      width: 100%; /* Full width */
+      height: 100%; /* Full height */
+      overflow: auto; /* Enable scroll if needed */
+      background-color: rgba(0, 0, 0, 0.5); /* Black w/ opacity */
+    }
+
+    .modal-content {
+      background-color: #2d3748; /* Dark background */
+      margin: 15% auto; /* 15% from the top and centered */
+      padding: 20px;
+      border: 1px solid #444; /* Border color */
+      width: 90%; /* Could be more or less, depending on screen size */
+      max-width: 400px; /* Maximum width */
+      border-radius: 8px; /* Rounded corners */
+    }
+  </style>
+</head>
+<body class="bg-black text-white font-sans leading-normal tracking-normal">
+
+  <!-- Navbar -->
+  <nav class="fixed w-full z-10 top-0 bg-black opacity-100 shadow">
+    <div class="container mx-auto flex flex-wrap items-center justify-between p-4">
+      <div class="flex items-center">
+        <a href="/home/" class="text-white font-bold text-2xl">Fake News Detection</a>
+      </div>
+      <div class="hidden md:flex space-x-6">
+        <a href="/home/" class="text-gray-300 hover:text-white">Home</a>
+        <a href="/profile" class="text-gray-300 hover:text-white">Profile</a>
+        <a href="/logout" class="text-gray-300 hover:text-white">Logout</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Profile Section -->
+  <div class="flex items-center justify-center min-h-screen pt-20">
+    <div class="w-full max-w-lg bg-gray-800 p-8 rounded shadow-lg">
+      <h2 class="text-2xl font-bold text-center text-white mb-8">Your Profile</h2>
+      
+      <!-- Profile Information -->
+      <div class="mb-6">
+        <p class="text-gray-300 mb-1"><strong>Username:</strong> {{ user.name }}</p>
+        <p class="text-gray-300 mb-1"><strong>Email:</strong> {{ user.email }}</p>
+        <p class="text-gray-300 mb-1"><strong>Password:</strong>{{user.password}}</p>
+        <p class="text-gray-300 mb-1"><strong>Behaviour:</strong>{{user_behavior}}</p>
+        <!-- Add more profile details here if needed -->
+      </div>
+      
+      <!-- Edit Profile Button -->
+      <div class="flex justify-center mt-8">
+        <a href="/edit_profile" class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition duration-300">Edit Profile</a>
+      </div>
+
+      <!-- Delete Account Button -->
+      <div class="flex justify-center mt-8">
+        <button id="deleteButton" class="bg-red-500 text-white py-2 px-4 rounded hover:bg-red-600 transition duration-300" onclick="openModal()">Delete Account</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Confirmation Modal -->
+  <div id="deleteModal" class="modal">
+    <div class="modal-content">
+      <h2 class="text-xl font-bold text-center text-white mb-4">Confirm Delete Account</h2>
+      <p class="text-gray-300 mb-4">Are you sure you want to delete your account? This action cannot be undone.</p>
+      <div class="flex justify-between">
+        <button class="bg-gray-600 text-white py-2 px-4 rounded hover:bg-gray-700" onclick="closeModal()">Cancel</button>
+        <button class="bg-red-500 text-white py-2 px-4 rounded hover:bg-red-600" onclick="confirmDelete()">Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-black text-white py-6">
+    <div class="container mx-auto text-center">
+      <p>&copy; 2024 Fake News Detection Platform. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script>
+    // Open the modal
+    function openModal() {
+      document.getElementById('deleteModal').style.display = 'block';
+    }
+
+    // Close the modal
+    function closeModal() {
+      document.getElementById('deleteModal').style.display = 'none';
+    }
+
+    // Confirm deletion action
+    function confirmDelete() {
+      // Redirect to the delete account view or perform the delete action
+      window.location.href = '/del_account'; // Adjust this URL as necessary
+    }
+
+    // Close modal when clicking outside of it
+    window.onclick = function(event) {
+      const modal = document.getElementById('deleteModal');
+      if (event.target == modal) {
+        closeModal();
+      }
+    }
+  </script>
+</body>
+</html>

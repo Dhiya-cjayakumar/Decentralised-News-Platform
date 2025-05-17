@@ -1,0 +1,102 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ news.headline }}</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <style>
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+        .image-container {
+            position: relative;
+            overflow: hidden;
+            border-radius: 0.75rem;
+        }
+        .image-container img {
+            transition: transform 0.5s ease-in-out;
+        }
+        .image-container:hover img {
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-b from-gray-900 to-black text-white font-sans leading-normal tracking-normal min-h-screen">
+    <!-- Navbar -->
+    <nav class="fixed w-full z-10 top-0 bg-black bg-opacity-90 backdrop-blur-sm shadow-lg">
+        <div class="container mx-auto flex flex-wrap items-center justify-between p-4">
+            <div class="flex items-center">
+                <a href="#" class="text-white font-bold text-2xl hover:text-blue-400 transition-colors duration-300">
+                    <i class="fas fa-newspaper mr-2"></i>News Platform
+                </a>
+            </div>
+            <div class="hidden md:flex space-x-6">
+                <a href="/" class="text-gray-300 hover:text-blue-400 transition-colors duration-300">Home</a>
+                <a href="/register" class="text-gray-300 hover:text-blue-400 transition-colors duration-300">Register</a>
+                <a href="/login" class="text-gray-300 hover:text-blue-400 transition-colors duration-300">Login</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mx-auto px-4 pt-24">
+        <!-- News Article -->
+        <div class="max-w-4xl mx-auto">
+            <div class="bg-gray-800 bg-opacity-50 rounded-xl shadow-xl backdrop-blur-sm border border-gray-700 p-6 mb-8 fade-in">
+                <!-- Header -->
+                <h1 class="text-3xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500">
+                    {{ news.headline }}
+                </h1>
+                
+                <!-- Meta Information -->
+                <div class="flex items-center justify-between mb-6">
+                    <div class="flex items-center space-x-4">
+                        <div class="text-gray-300">
+                            <span>By {{ news.author.name }}</span>
+                            <div class="mt-1 text-sm">{{ news.created_at|date:"F j, Y, g:i a" }}</div>
+                        </div>
+                    </div>
+                    <div>
+                        <span class="px-3 py-1 bg-blue-500 bg-opacity-20 text-blue-400 rounded-full text-sm">
+                            {{ news.newsstatus }}
+                        </span>
+                    </div>
+                </div>
+
+                <!-- News Image -->
+                {% if news.image %}
+                <div class="image-container mb-6">
+                    <img src="{{ news.image.url }}" alt="{{ news.headline }}" 
+                         class="w-full h-auto rounded-lg shadow-md">
+                </div>
+                {% endif %}
+
+                <!-- News Content -->
+                <div class="prose max-w-none">
+                    <div class="text-gray-300 leading-relaxed text-lg space-y-4">
+                        {{ news.newstext|linebreaks }}
+                    </div>
+                </div>
+            </div>
+
+            
+
+            
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-black bg-opacity-50 text-white py-8 mt-12">
+        <div class="container mx-auto text-center">
+            <p class="text-gray-400">&copy; 2024 News Platform. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>

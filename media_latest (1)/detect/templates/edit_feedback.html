@@ -1,0 +1,106 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Edit Feedback</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+</head>
+<body class="bg-gray-900 text-white font-sans leading-normal tracking-normal">
+
+  <!-- Page Header -->
+  <div class="container mx-auto pt-20 px-4">
+    <h2 class="text-3xl font-bold text-center text-white mb-10">Edit Your Feedback</h2>
+
+    <form method="POST" class="bg-gray-800 p-8 rounded-lg shadow-lg">
+      {% csrf_token %}
+      
+      <!-- Feedback Text -->
+      <div class="mb-6">
+        <label for="feedback" class="block text-lg text-gray-300">Your Feedback:</label>
+        <textarea id="feedback" name="feedback" class="w-full bg-gray-700 text-white p-3 rounded-md" rows="4">{{ feedback.feedbacktext }}</textarea>
+      </div>
+      
+      <!-- Rating (5 Stars) -->
+      <div class="mb-6">
+        <label for="rating" class="block text-gray-300 text-sm font-bold mb-2">Rating (Current: {{ feedback.rating }})</label>
+        <div class="flex space-x-2" id="starRating">
+          <input type="radio" name="rating" value="1" id="star1" hidden required {% if feedback.rating == '1' or feedback.rating == 1.0 or feedback.rating == 1 %}checked{% endif %}>
+          <label for="star1" class="text-2xl cursor-pointer {% if feedback.rating >= 1 %}text-yellow-400{% else %}text-gray-400{% endif %}">
+            <i class="fas fa-star"></i>
+          </label>
+
+          <input type="radio" name="rating" value="2" id="star2" hidden required {% if feedback.rating == '2' or feedback.rating == 2.0 or feedback.rating == 2 %}checked{% endif %}>
+          <label for="star2" class="text-2xl cursor-pointer {% if feedback.rating >= 2 %}text-yellow-400{% else %}text-gray-400{% endif %}">
+            <i class="fas fa-star"></i>
+          </label>
+
+          <input type="radio" name="rating" value="3" id="star3" hidden required {% if feedback.rating == '3' or feedback.rating == 3.0 or feedback.rating == 3 %}checked{% endif %}>
+          <label for="star3" class="text-2xl cursor-pointer {% if feedback.rating >= 3 %}text-yellow-400{% else %}text-gray-400{% endif %}">
+            <i class="fas fa-star"></i>
+          </label>
+
+          <input type="radio" name="rating" value="4" id="star4" hidden required {% if feedback.rating == '4' or feedback.rating == 4.0 or feedback.rating == 4 %}checked{% endif %}>
+          <label for="star4" class="text-2xl cursor-pointer {% if feedback.rating >= 4 %}text-yellow-400{% else %}text-gray-400{% endif %}">
+            <i class="fas fa-star"></i>
+          </label>
+
+          <input type="radio" name="rating" value="5" id="star5" hidden required {% if feedback.rating == '5' or feedback.rating == 5.0 or feedback.rating == 5 %}checked{% endif %}>
+          <label for="star5" class="text-2xl cursor-pointer {% if feedback.rating >= 5 %}text-yellow-400{% else %}text-gray-400{% endif %}">
+            <i class="fas fa-star"></i>
+          </label>
+        </div>
+      </div>
+
+      <!-- Submit Button -->
+      <div class="text-center">
+        <button type="submit" class="bg-blue-500 text-white py-2 px-6 rounded-md focus:outline-none hover:bg-blue-600 transition duration-300">Save Changes</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-gray-800 text-white py-6 mt-12">
+    <div class="container mx-auto text-center">
+      <p>&copy; 2024 Feedback Platform. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script>
+    // Change the star color when selected
+    const stars = document.querySelectorAll('#starRating label');
+    const inputs = document.querySelectorAll('#starRating input');
+    
+    stars.forEach((star, index) => {
+      star.addEventListener('click', () => {
+        // Update star colors
+        stars.forEach((s, i) => {
+          s.classList.remove('text-gray-400', 'text-yellow-400');
+          s.classList.add(i <= index ? 'text-yellow-400' : 'text-gray-400');
+        });
+      });
+
+      // Hover effects
+      star.addEventListener('mouseenter', () => {
+        stars.forEach((s, i) => {
+          s.classList.remove('text-gray-400', 'text-yellow-400');
+          s.classList.add(i <= index ? 'text-yellow-400' : 'text-gray-400');
+        });
+      });
+
+      star.addEventListener('mouseleave', () => {
+        // Reset to selected value
+        const selectedIndex = Array.from(inputs).findIndex(input => input.checked);
+        if (selectedIndex >= 0) {
+          stars.forEach((s, i) => {
+            s.classList.remove('text-gray-400', 'text-yellow-400');
+            s.classList.add(i <= selectedIndex ? 'text-yellow-400' : 'text-gray-400');
+          });
+        }
+      });
+    });
+  </script>
+</body>
+</html>

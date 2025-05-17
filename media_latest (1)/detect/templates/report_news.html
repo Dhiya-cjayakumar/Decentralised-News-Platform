@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Report News</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.0.0/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-900 text-white font-sans leading-normal tracking-normal">
+
+    <!-- Main Content Area -->
+    <div class="container mx-auto p-6 bg-gray-800 rounded-lg mt-10 max-w-3xl">
+
+        <!-- Page Heading -->
+        <h1 class="text-2xl font-semibold text-gray-100 mb-6">Report News</h1>
+
+        <!-- News Display Section -->
+        <div class="bg-gray-700 p-4 rounded-lg mb-6">
+            <h2 class="text-xl font-semibold text-gray-200">{{ news.title }}</h2>
+            <p class="text-gray-300 mt-2">{{ news.newstext }}</p>
+        </div>
+
+        <!-- Report Form -->
+        <form method="POST" action="{% url 'report_news' news.id %}" class="space-y-4">
+            {% csrf_token %}
+            
+            <!-- Reason Textarea (not required) -->
+            <div>
+                <label for="reason" class="block text-gray-200 font-medium mb-2">Reason for Reporting (not required)</label>
+                <textarea id="reason" name="reason" rows="4" class="w-full bg-gray-700 text-white border-gray-600 p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter your reason for reporting..."></textarea>
+            </div>
+
+            <!-- Report Type Selection -->
+            <div>
+                <label for="report_type" class="block text-gray-200 font-medium mb-2">Report Type</label>
+                <select id="report_type" name="report_type" class="w-full bg-gray-700 text-white border-gray-600 p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                    <option class="text-green-300" value="Real" {% if news.newsstatus == 'Real' %} selected {% endif %}>Real</option>
+                    <option class="text-red-300" value="Fake" {% if news.newsstatus == 'Fake' %} selected {% endif %}>Fake</option>
+                </select>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="text-center">
+                <button type="submit" class="bg-blue-600 text-white py-2 px-6 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">Submit Report</button>
+            </div>
+        </form>
+
+    </div>
+
+</body>
+</html>

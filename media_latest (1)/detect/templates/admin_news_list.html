@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>News List - Admin Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.0.0/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        /* Sidebar styling */
+        .sidebar {
+            min-width: 250px;
+            max-width: 250px;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background-color: #1a202c;
+            color: white;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            z-index: 1000;
+        }
+        .sidebar a {
+            margin: 10px 0;
+            color: #a0aec0;
+            text-decoration: none;
+            font-size: 1rem;
+        }
+        .sidebar a:hover {
+            color: #63b3ed;
+        }
+        /* Content area styling */
+        .content {
+            margin-left: 250px;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <h2 class="text-xl font-semibold mb-4">Admin Dashboard</h2>
+        <a href="{% url 'admin_home' %}">Home</a>
+        <a href="{% url 'view_users' %}">User List</a>
+        <a href="{% url 'view_news' %}">News List</a>
+    </div>
+
+    <!-- Content Area -->
+    <div class="content">
+        <h1 class="text-2xl font-semibold text-gray-800 mb-6">Block Chain</h1>
+
+        <!-- News Table -->
+        <div class="overflow-auto">
+            <table class="min-w-full bg-white border border-gray-200 rounded-lg shadow-md">
+                <thead>
+                    <tr class="bg-gray-200 text-gray-700">
+                        <th class="px-6 py-3 border-b text-left">ID</th>
+                        <th class="px-6 py-3 border-b text-left">News Content</th>
+                        <th class="px-6 py-3 border-b text-left">Author</th>
+                        <th class="px-6 py-3 border-b text-left">Created At</th>
+                        <th class="px-6 py-3 border-b text-left">News Status</th>
+                        <th class="px-6 py-3 border-b text-left">Behavior</th>
+                        <th class="px-6 py-3 border-b text-left">Category</th>
+                        <th class="px-6 py-3 border-b text-left">Image</th>
+                        <th class="px-6 py-3 border-b text-left">Hash Value</th>
+                        <th class="px-6 py-3 border-b text-left">Status</th>
+                        <th class="px-6 py-3 border-b text-left">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in news %}
+                    <tr class="text-gray-700">
+                        <td class="px-6 py-4 border-b">{{ item.id }}</td>
+                        <td class="px-6 py-4 border-b">
+                            <strong>{{ item.headline }}</strong><br>
+                            {% if item.newstext|length > 5 %}
+                                {{ item.newstext|truncatewords:5 }} 
+                                <button onclick="openModal('{{ item.id }}')" class="text-blue-500 hover:underline">Read More</button>
+                            {% else %}
+                                {{ item.newstext }}
+                            {% endif %}
+                        </td>
+                        <td class="px-6 py-4 border-b">{{ item.author.name }}</td>
+                        <td class="px-6 py-4 border-b">{{ item.created_at|date:"d M Y, H:i" }}</td>
+                        <td class="px-6 py-4 border-b">{{ item.newsstatus|default:"Pending" }}</td>
+                        <td class="px-6 py-4 border-b">{{ item.us_behave }}</td>
+                        <td class="px-6 py-4 border-b">{{ item.category }}</td>
+                        <td class="px-6 py-4 border-b">
+                            {% if item.image %}
+                                <img src="{{ item.image.url }}" alt="News Image" class="w-16 h-16 object-cover rounded">
+                            {% else %}
+                                <span class="text-gray-500">No Image</span>
+                            {% endif %}
+                        </td>
+                        <td class="px-6 py-4 border-b">{{ item.news_hash }}</td>
+                        <td class="px-6 py-4 border-b">
+                            <span class="px-2 py-1 rounded-full text-xs font-medium {% if item.status %}bg-green-100 text-green-800{% else %}bg-red-100 text-red-800{% endif %}">
+                                {{ item.status|yesno:"Active,Inactive" }}
+                            </span>
+                            <a href="{% url 'toggle_news_status' item.id %}" class="ml-2 text-sm text-blue-500 hover:underline">
+                                {{ item.status|yesno:"Deactivate,Activate" }}
+                            </a>
+                        </td>
+                        <td class="px-6 py-4 border-b">
+                            <a href="{% url 'edit_newsad' item.id %}" class="text-blue-500 hover:underline">Edit</a> |
+                            <a href="{% url 'delete_newsad' item.id %}" onclick="return confirm('Are you sure you want to delete this news item?');" class="text-red-500 hover:underline">Delete</a>
+                        </td>
+                    </tr>
+
+                    <!-- Read More Modal -->
+                    <div id="modal-{{ item.id }}" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center hidden">
+                        <div class="bg-white rounded-lg shadow-lg w-1/2 p-6">
+                            <h2 class="text-lg font-bold mb-2">{{ item.headline }}</h2>
+                            <p class="text-gray-700">{{ item.newstext }}</p>
+                            <p class="text-gray-600 mt-2"><strong>Category:</strong> {{ item.category }}</p>
+                            <p class="text-gray-600"><strong>Status:</strong> {{ item.newsstatus|default:"Pending" }}</p>
+                            <p class="text-gray-600"><strong>Author:</strong> {{ item.author.name }}</p>
+                            <p class="text-gray-600"><strong>Posted on:</strong> {{ item.created_at|date:"d M Y, H:i" }}</p>
+                            <p class="text-gray-600"><strong>Active:</strong> {{ item.status|yesno:"Yes,No" }}</p>
+                            {% if item.image %}
+                                <img src="{{ item.image.url }}" alt="News Image" class="mt-4 rounded shadow-lg">
+                            {% endif %}
+                            <button onclick="closeModal('{{ item.id }}')" class="mt-4 bg-blue-500 text-white px-4 py-2 rounded">Close</button>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <tr>
+                        <td colspan="11" class="text-center text-gray-500 py-4">No news found.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- JavaScript for modal functionality -->
+    <script>
+        function openModal(id) {
+            document.getElementById("modal-" + id).classList.remove("hidden");
+        }
+
+        function closeModal(id) {
+            document.getElementById("modal-" + id).classList.add("hidden");
+        }
+    </script>
+
+</body>
+</html>

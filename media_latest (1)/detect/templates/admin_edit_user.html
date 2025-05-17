@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit User - Admin Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.0.0/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        /* Sidebar styling */
+        .sidebar {
+            min-width: 250px;
+            max-width: 250px;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background-color: #1a202c;
+            color: white;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            z-index: 1000;
+        }
+        .sidebar a {
+            margin: 10px 0;
+            color: #a0aec0;
+            text-decoration: none;
+            font-size: 1rem;
+        }
+        .sidebar a:hover {
+            color: #63b3ed;
+        }
+        /* Content area styling */
+        .content {
+            margin-left: 250px;
+            padding: 20px;
+        }
+    
+    </style>
+</head>
+<body class="bg-gray-100">
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <h2 class="text-xl font-semibold mb-4">Admin Dashboard</h2>
+        <a href="{% url 'admin_home' %}">Home</a>
+        <a href="{% url 'view_users' %}">User List</a>
+        <!-- Add more links as needed -->
+    </div>
+
+    <!-- Content Area -->
+    <div class="content">
+        <h1 class="text-2xl font-semibold text-gray-800 mb-6">Edit User</h1>
+
+        <!-- Edit User Form -->
+        <div class="bg-white p-6 rounded-lg shadow-md w-full max-w-lg">
+            <form action="{% url 'edit_users' user.id %}" method="POST" class="space-y-4">
+                {% csrf_token %}
+                
+                <div>
+                    <label for="username" class="block text-gray-700">Username</label>
+                    <input type="text" name="username" id="username" value="{{ user.name }}" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                </div>
+
+                <div>
+                    <label for="email" class="block text-gray-700">Email</label>
+                    <input type="email" name="email" id="email" value="{{ user.email }}" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                </div>
+
+                <div>
+                    <label for="password" class="block text-gray-700">Password</label>
+                    <input type="password" name="password" id="password" value="{{ user.password }}" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                </div>
+
+                <button type="submit" class="w-full bg-blue-500 text-white py-2 rounded-lg font-semibold hover:bg-blue-600 focus:outline-none">
+                    Save Changes
+                </button>
+            </form>
+        </div>
+    </div>
+
+</body>
+</html>

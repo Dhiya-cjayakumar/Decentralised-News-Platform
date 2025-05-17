@@ -1,0 +1,155 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="View all news posts on our platform.">
+    <meta name="keywords" content="News, All News, Platform">
+    <title>All News | Platform</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <style>
+        .news-card {
+            transition: all 0.3s ease-in-out;
+        }
+        .news-card:hover {
+            transform: translateY(-5px);
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+        .image-slider {
+            position: relative;
+            overflow: hidden;
+            border-radius: 0.75rem 0.75rem 0 0;
+        }
+        .image-slider img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            transition: transform 0.5s ease-in-out;
+        }
+        .image-slider:hover img {
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-b from-gray-900 to-black text-white font-sans leading-normal tracking-normal min-h-screen">
+
+    <!-- Navbar -->
+    <nav class="fixed w-full z-10 top-0 bg-black bg-opacity-90 backdrop-blur-sm shadow-lg">
+        <div class="container mx-auto flex flex-wrap items-center justify-between p-4">
+            <div class="flex items-center">
+                <a href="#" class="text-white font-bold text-2xl hover:text-blue-400 transition-colors duration-300">
+                    <i class="fas fa-newspaper mr-2"></i>News Platform
+                </a>
+            </div>
+            <div class="hidden md:flex space-x-6">
+                <a href="/home/" class="text-gray-300 hover:text-blue-400 transition-colors duration-300">Home</a>
+                <a href="/add_news" class="text-gray-300 hover:text-blue-400 transition-colors duration-300">Add News</a>
+                <a href="/view_mynews" class="text-gray-300 hover:text-blue-400 transition-colors duration-300">My News</a>
+                <a href="/logout" class="text-gray-300 hover:text-blue-400 transition-colors duration-300">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- All News Section -->
+    <div class="container mx-auto pt-24 px-4">
+        <h2 class="text-4xl font-bold text-center text-white mb-10 fade-in">
+            <span class="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500">
+                All News Posts
+            </span>
+        </h2>
+
+        <!-- Category Filter Dropdown -->
+        <div class="flex justify-center mb-6 fade-in">
+            <select id="categoryFilter" 
+                    class="px-4 py-2 bg-gray-900 text-white border border-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <option value="all">All Categories</option>
+                <option value="Sports">Sports</option>
+                <option value="Entertainment">Entertainment</option>
+                <option value="Local News">Local News</option>
+                <option value="Technology">Technology</option>
+                <option value="Business">Business</option>
+            </select>
+        </div>
+
+        {% if news %}
+            <div id="newsContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {% for item in news %}
+                    <div class="news-card bg-gray-800 bg-opacity-50 rounded-xl shadow-xl backdrop-blur-sm border border-gray-700 hover:border-blue-400 fade-in" 
+                         style="animation-delay: {{ forloop.counter }}00ms" data-category="{{ item.category }}">
+                        <div class="image-slider">
+                            {% if item.image %}
+                            <img src="{{ item.image.url }}" alt="News Image" class="w-full h-48 object-cover">
+                            {% else %}
+                                <div class="no-image-placeholder w-full h-48 flex items-center justify-center bg-gray-200">
+                                    <p class="text-gray-500">No image available</p>
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div class="p-6">
+                            <a href="/detailed_news/{{ item.id }}/" class="block">
+                                <h3 class="text-xl font-semibold text-white mb-4 hover:text-blue-400 transition-colors duration-300">{{ item.headline }}</h3>
+                            </a>
+                            <div class="flex flex-col space-y-4">
+                                <div class="flex items-center space-x-2">
+                                    <i class="fas fa-circle text-xs text-blue-400"></i>
+                                    <p class="text-sm text-blue-400 font-medium">Category: {{ item.category }}</p>
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <i class="fas fa-circle text-xs text-blue-400"></i>
+                                    <p class="text-sm text-blue-400 font-medium">Status: {{ item.newsstatus }}</p>
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <i class="fas fa-user-circle text-xs text-blue-400"></i>
+                                    <p class="text-sm text-blue-400 font-medium">Behavior: {{ item.us_behave }}</p>
+                                </div>
+                                {% if item.author.id != uid %}
+                                    <a href="/report_news/{{ item.id }}/" 
+                                       class="inline-flex items-center text-red-400 hover:text-red-300 transition-colors duration-300">
+                                        <i class="fas fa-flag mr-2"></i>
+                                        <span>Report this post</span>
+                                    </a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="text-center text-gray-400 fade-in">No news posts available.</p>
+        {% endif %}
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-black bg-opacity-50 text-white py-8 mt-12">
+        <div class="container mx-auto text-center">
+            <p class="text-gray-400">&copy; 2024 News Platform. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript for Category Filtering -->
+    <script>
+        document.getElementById('categoryFilter').addEventListener('change', function() {
+            let selectedCategory = this.value.toLowerCase();
+            let newsCards = document.querySelectorAll('.news-card');
+
+            newsCards.forEach(card => {
+                let category = card.getAttribute('data-category').toLowerCase();
+                if (selectedCategory === 'all' || category === selectedCategory) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>

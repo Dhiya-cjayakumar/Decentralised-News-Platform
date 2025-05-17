@@ -1,0 +1,68 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Stay informed with our advanced Fake News Detection platform. Identify reliable information and combat misinformation with cutting-edge AI technology.">
+  <meta name="keywords" content="Fake News Detection, AI, Misinformation, Real-time Analysis">
+  <title>News Hub Platform</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+
+  <script>
+    // Toggle Navbar
+    function toggleNavbar() {
+      document.getElementById('mobile-menu').classList.toggle('hidden');
+    }
+  </script>
+</head>
+<body class="bg-gray-100 font-sans leading-normal tracking-normal">
+
+  <!-- Navbar -->
+  <nav class="fixed w-full z-10 top-0  opacity-90 shadow">
+    <div class="container mx-auto flex flex-wrap items-center justify-between p-4">
+      <div class="flex items-center">
+        <a href="#" class="text-white font-bold text-2xl">News Hub</a>
+      </div>
+      <!-- Toggle Button for Mobile -->
+      <div class="block md:hidden ">
+        <button onclick="toggleNavbar()" class="text-white focus:outline-none">
+          <!-- Font Awesome Hamburger Icon -->
+          <i class="fas fa-bars"></i>
+        </button>
+      </div>
+      <!-- Navbar Links -->
+      <div id="mobile-menu" class="hidden w-full md:flex md:items-center md:w-auto space-y-2 md:space-y-0 md:space-x-6">
+        <a href="/" class="block md:inline text-gray-300 hover:text-white">Home</a>
+        <a href="/register/" class="block md:inline text-gray-300 hover:text-white">Register</a>
+        <a href="/login/" class="block md:inline text-gray-300 hover:text-white">Login</a>
+        <a href="/admin_login/" class="block md:inline text-gray-300 hover:text-white"> Admin Login</a>
+        
+      </div>
+    </div>
+  </nav>
+
+  <!-- Header Section with Background Video -->
+  <header class="relative w-full h-screen overflow-hidden">
+    <video class="absolute top-0 left-0 w-full h-full object-cover" autoplay loop muted playsinline>
+      <source src="{% static 'bg_video/3141208-uhd_3840_2160_25fps.mp4' %}" type="video/mp4">
+      Your browser does not support the video tag.
+    </video>
+    <div class="absolute inset-0 bg-black opacity-50"></div>
+    <div class="relative h-full flex flex-col items-center justify-center text-center text-white p-4">
+      <h1 class="text-4xl md:text-5xl font-bold mb-4">News Hub</h1>
+      <p class="text-base md:text-lg mb-8 max-w-xl">We help you identify misinformation and stay informed with trustworthy news sources. Get real-time analysis and insights.</p>
+      <a href="/allnews/" class="bg-blue-500 text-white px-6 py-3 rounded-full hover:bg-blue-600 transition duration-300">Read News</a>
+    </div>
+  </header>
+
+  <!-- Footer -->
+  <footer class="bg-gray-900 text-white py-6">
+    <div class="container mx-auto text-center">
+      <p>&copy; 2024 News Hub Platform. All rights reserved.</p>
+    </div>
+  </footer>
+
+</body>
+</html>
